@@ -1,0 +1,11 @@
+{
+  "//": "Tests run under Node's type stripper, not Metro: they import with .ts extensions and use node: builtins, neither of which belongs in the app's config.",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": ["src/lib/__tests__/**/*", "src/lib/merge.ts", "src/store/user.tsx"],
+  "exclude": []
+}

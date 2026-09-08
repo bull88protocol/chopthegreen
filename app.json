@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Chop the Greens",
+    "slug": "chop-the-greens",
+    "version": "1.0.0",
+    "scheme": "chopthegreens",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.chopthegreens.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.chopthegreens.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#2A3E32",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "versionCode": 1
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "backgroundColor": "#0A0D0B",
+          "imageWidth": 180
+        }
+      ],
+      "./plugins/withReleaseSigning",
+      "@react-native-google-signin/google-signin"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "_comment": "Firebase / Google sign-in \u2014 see SYNC-SETUP.md. Sync stays OFF until BOTH firebaseAppId and googleWebClientId are filled in; the rest are already set from the chopthegreens project.",
+      "firebaseApiKey": "AIzaSyAkJE60gl0aCFCtIwQZWXpnco7h5rXygvM",
+      "firebaseAuthDomain": "chopthegreens.firebaseapp.com",
+      "firebaseProjectId": "chopthegreens",
+      "firebaseStorageBucket": "chopthegreens.firebasestorage.app",
+      "firebaseMessagingSenderId": "236481132144",
+      "firebaseAppId": "",
+      "googleWebClientId": ""
+    }
+  }
+}
