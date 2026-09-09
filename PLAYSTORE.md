@@ -89,6 +89,46 @@ serve. Play splits the AAB per-device, so your users download noticeably less.
    review delay, so it's the fastest way to check the real thing installs from Play.
 4. Work through the tasks Play lists. The ones that need real thought are below.
 
+### Releases: upload once, then promote
+
+The file to upload is **`dist-release/chopthegreens-1.0.0-play.aab`** — 75 MB,
+`versionCode 1`, `version 1.0.0`. It's gitignored, so it lives only on the build machine.
+Never upload the `.apk`; that's for sideloading.
+
+Upload to **Internal testing** first — no review, live in minutes — then **promote that
+release** to Closed testing rather than uploading again. Version codes are copied to the
+destination track, and the release name and notes are inherited unless overridden, so one
+build serves every track. Uploading twice would need a `versionCode` bump for no reason.
+
+**Release notes for 1.0.0** (475 of the 500 Unicode characters allowed per language,
+whitespace included — Console wraps them in `<en-US>`). Written to survive promotion to
+production, so the sign-in line matches the full description and the Data Safety answers:
+
+```
+First release.
+
+The whole chopthegreens.com recipe collection, on your phone:
+
+• Cook Mode — one step per swipe, the screen stays awake, and timers read straight from the step
+• A shopping list that merges amounts across recipes and groups them by supermarket aisle
+• Change the servings and every quantity rescales, fractions and all
+• Plan the week, then send the whole thing to your list
+• Works offline
+
+Signing in is optional and only backs up your saves, list and plan.
+```
+
+The rest of what a track asks for: **release name** defaults to `1 (1.0.0)`, leave it;
+**testers** are an email list or a Google Group (internal is capped at 100); **feedback
+email** should be `sungari.001@gmail.com`, the same address as the privacy policy and the
+deletion route, so there's one inbox to watch.
+
+> **Check the 12-tester gate before planning a timeline.** Production can require 12 testers
+> opted into a closed track for 14 continuous days. It targets newly created *personal*
+> developer accounts and shouldn't apply to this established one — but Console is the
+> authority, not this file. If the Production page shows the requirement, it applies, and
+> you need 12 real people for two weeks.
+
 ### Store listing
 
 | Field | Limit | Suggested |
