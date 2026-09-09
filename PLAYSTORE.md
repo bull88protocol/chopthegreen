@@ -129,6 +129,33 @@ deletion route, so there's one inbox to watch.
 > authority, not this file. If the Production page shows the requirement, it applies, and
 > you need 12 real people for two weeks.
 
+### The "no deobfuscation file" warning is noise — ignore it
+
+Uploading the bundle raises *"There is no deobfuscation file associated with this App
+Bundle."* It's conditional on something this build doesn't do:
+
+- `android.enableMinifyInReleaseBuilds` defaults to **false** (`android/app/build.gradle`)
+  and nothing overrides it in `gradle.properties`
+- no `android/app/build/outputs/mapping/` directory is produced — R8 never runs
+- the bundle carries no obfuscation metadata
+
+Nothing is obfuscated, so there is no mapping file to upload and crash reports arrive
+readable. The bundle *does* ship native debug symbols
+(`BUNDLE-METADATA/com.android.tools.build.debugsymbols/…` for all four ABIs), which is the
+part that actually matters for React Native, where plenty of crashes originate in C++.
+
+**Don't act on the "R8 reduces app size" half either, at least not before launch.** The
+75 MB is mostly native libraries across four ABIs, which R8 doesn't touch — it shrinks
+Java/Kotlin bytecode, a thin slice — and Play already splits per device, so real downloads
+are 25–30 MB. Enabling it would strip code from a build that is already signed, verified
+and hardware-tested, and both React Native's module system and Firebase rely on reflection,
+which is precisely what R8 removes when it can't see the callsite. That's a full re-test on
+device for a saving nobody notices. Same trade `STATUS.md` records for the expo-doctor
+patch drift.
+
+If R8 is ever turned on, a mapping file can be attached to an existing version afterwards
+through App Bundle Explorer — it isn't a one-shot at upload time.
+
 ### Store listing
 
 | Field | Limit | Suggested |
