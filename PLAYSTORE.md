@@ -143,14 +143,17 @@ No account. No ads. No tracking.
 ```
 </details>
 
-**If you ship with sync configured, change the last line.** "No account" stops being true
-the moment the app offers one, and Play treats the listing as a claim it can hold you to.
-Swap it for:
+**⚠️ The draft above ends "No account. No ads. No tracking." — that line is now wrong.**
+The app offers a Google sign-in, and Play treats listing copy as a claim it can hold you
+to. Use this ending instead:
 
 ```
 No ads. No tracking. Signing in is optional — it only backs up your own saved recipes,
 shopping list and meal plan, and every feature works without it.
 ```
+
+That wording is deliberate: it keeps the two claims that are still absolutely true, and
+describes the account as what it is — optional, and a backup rather than a gate.
 
 ### Privacy policy — required
 
@@ -160,17 +163,22 @@ put it on the blog (e.g. `chopthegreens.com/app-privacy/`) and paste that URL in
 
 ### Data safety form
 
-**Your answer depends on whether you ship with Google sign-in configured** (see
-`SYNC-SETUP.md`). Play holds you to this, so answer for what you actually ship.
+**Sync is now configured** (project `chop-the-greens`), so the app *does* offer an
+account and the second table below is the one that applies. Play holds you to these
+answers, so they have to describe what you actually ship — if you later blank `extra` in
+`app.json` to ship without sync, switch back to the first table.
 
-**Shipping without sync** (`extra` left blank in `app.json`) — the simple case:
+<details>
+<summary>If you ship <em>without</em> sync (<code>extra</code> blank) — the simple case</summary>
 
 - **Does your app collect or share user data?** → **No**
 - Saves, shopping list and meal plan never leave the device. No accounts, no analytics,
   no ad SDKs.
 - **Encrypted in transit?** → Yes (HTTPS).
 
-**Shipping with sync configured** — declare it properly:
+</details>
+
+**Shipping with sync configured — this is your case:**
 
 | Question | Answer |
 |---|---|

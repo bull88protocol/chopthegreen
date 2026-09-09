@@ -28,13 +28,13 @@ blocked on code or assets.
 | 6 | **Create the app in Play Console** | Upload `dist-release/chopthegreens-1.0.0-play.aab` to Internal testing. Everything it asks for now exists — see `PLAYSTORE.md`. | You |
 | ~~7~~ | ~~Commit the repo~~ | **Done** — initial commit `b4abb26`, 79 files, pushed to `bull88protocol/chopthegreen`. `credentials/`, `dist-release/` and `android/` stay ignored. | ✅ |
 | ~~8~~ | ~~Re-verify on the Pixel~~ | **Done** — installed and screenshotted on hardware. | ✅ |
-| 9 | **Finish Firebase** | Project `chopthegreens` exists and its keys are in `app.json`. Two values still missing — a **Web app ID** and a **Web client ID** — plus a SHA-1 registration and Firestore rules. `SYNC-SETUP.md` has a table of exactly what's outstanding. | You |
+| 9 | **Finish Firebase** | Mostly done — project `chop-the-greens`, all seven values wired, `syncEnabled` is **true**, SHA-1 verified against the keystore. Two console jobs left: create **Firestore + publish the rules**, and **restrict the API key**. | You |
 
-**#9 is the only thing standing between the current build and sign-in working.** The
-config in `app.json` is real but incomplete, so `syncEnabled` is still false and the app
-ships on-device-only — which is also the simplest possible Data Safety form ("collects no
-data"). Nothing is broken by the half-configured state; it just stays dormant. You can
-also ship v1 without it and turn sync on in 1.0.1 without breaking anyone.
+**Sync is on as of 9 September 2026.** That changes two things outside the code: the Play
+**Data Safety** form moves to the "collects data" answers, and the full description's
+closing line ("No account…") is now false. Both are handled in `PLAYSTORE.md`. If you'd
+rather ship v1 without accounts after all, blanking `extra` in `app.json` reverts every bit
+of it — no code change, no migration.
 
 ### Settled decisions
 
@@ -72,6 +72,38 @@ also ship v1 without it and turn sync on in 1.0.1 without breaking anyone.
 | Social | YouTube / Instagram / Pinterest / TikTok at the foot of Discover; per-recipe share sheet links the blog post |
 | Sync | *Optional* Google sign-in backs up saves/list/plan to Firestore. Off unless configured — see `SYNC-SETUP.md` |
 | Sign-in prompts | A dismissible card on Saved / List / Plan, shown only when there's something to lose. Nothing is ever gated behind an account |
+
+### v5.1 — sign-in prompt at the first save (9 September 2026)
+
+**Asked:** should a pop-up on first open invite people to sync, with a "Not now"?
+
+Argued against and not built. On first launch there is no list, no plan and nothing saved,
+so "back up your recipes" is a pitch about protecting something that doesn't exist — the
+offer reads as the app wanting an account for its own sake, on the one screen that has to
+sell the app. "Not now" softens the ask but the cost is the interruption, not the
+dismissal. The account button is already in the Discover header from first launch for
+anyone who wants it.
+
+The instinct was right about the gap, though — just not its location. **The first save** is
+the first moment the pitch is true, and saving was completely silent: bookmark from a
+recipe or a card and nothing happened, so the prompt was only met later on the Saved tab,
+if ever.
+
+`src/components/FirstSavePrompt.tsx` fills that. A snackbar slides up the first time
+anything is saved — *"Saved to this phone. Sign in to back it up."* — with a Sign in action
+and a dismiss. Auto-hides after 6s, never returns. Chosen over a modal so it stays
+ignorable.
+
+- Lives in the **root** layout, not the tabs layout: saving happens from the recipe screen,
+  which is a sibling route rather than a child of the tabs.
+- Fires on a 0 → 1 transition in `saved`, with the previous count seeded *after* the store
+  hydrates — otherwise an existing user's saves read as a fresh save on every cold start.
+- Gated on `status === 'signedOut'` rather than `!user`, because during the cold-start auth
+  restore the status is `working` and the user is still null.
+- Honours the same dismissal key as `SyncNudge`, so saying no once silences both.
+
+Verified on the Pixel: fired on the first save, cleared itself after 6s, stayed silent for
+the next three saves, and did not appear on a cold start with four recipes already saved.
 
 ### v5 — verified on the phone (8 September 2026)
 

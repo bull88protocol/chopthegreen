@@ -13,6 +13,7 @@ import * as SystemUI from 'expo-system-ui';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { FirstSavePrompt } from '../src/components/FirstSavePrompt';
 import { RecipesProvider } from '../src/store/recipes';
 import { AuthProvider } from '../src/store/auth';
 import { UserProvider } from '../src/store/user';
@@ -77,6 +78,9 @@ function Shell() {
           options={{ animation: 'fade_from_bottom', gestureEnabled: false }}
         />
       </Stack>
+      {/* Above the navigator so it reaches the recipe screen too, which is a
+          sibling route rather than a child of the tabs. */}
+      <FirstSavePrompt />
     </GestureHandlerRootView>
   );
 }

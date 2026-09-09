@@ -52,8 +52,10 @@ shopping list in one tap.
 **Backup, optional** — signing in with Google backs up your saves, shopping list and meal
 plan to Firestore so they survive a new phone. It is off unless a Firebase project is
 configured (`SYNC-SETUP.md`), and it is never a gate: every recipe and every feature works
-signed out and offline. A dismissible card on Saved / List / Plan is the only place the app
-brings it up, and only once there's something on screen worth backing up.
+signed out and offline. The app brings it up in exactly two places, both chosen so the
+offer is true when it's made: a one-time snackbar the first time you save anything, and a
+dismissible card on Saved / List / Plan once there's something on screen worth backing up.
+Never on first launch — there's nothing to protect yet.
 
 **Light & dark** — a three-way toggle (light / dark / follow-system) in the Discover header,
 persisted. Two palettes share one token shape, so no component branches on the theme.

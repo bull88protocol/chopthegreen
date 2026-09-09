@@ -276,8 +276,10 @@ Two bits of UI appear as soon as the config is present, and not before:
 
 - the **account button** in the Discover header, and
 - a dismissible **"back this up" card** on Saved, List and Plan — shown only when you're
-  signed out and there's actually something on that screen to lose. Tapping it opens the
-  same account sheet.
+  signed out and there's actually something on that screen to lose; and
+- a one-time **snackbar on the first save**, which auto-hides after six seconds.
+
+Both open the same account sheet, and dismissing either silences both.
 
 Nothing else changes. No feature moves behind the login.
 
