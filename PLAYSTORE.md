@@ -102,6 +102,7 @@ serve. Play splits the AAB per-device, so your users download noticeably less.
 | Category | one | *Food & Drink* |
 | Tags | up to 5 | **`Recipe`** and **`Food & drink`** — only those two, see below |
 | Video | optional | **Leave blank** — see below |
+| AI-generated assets | per asset | Label the **icon** and **feature graphic**. Not the screenshots. See below |
 
 Screenshots are the single biggest lever on install rate. Cook Mode and the aisle-grouped
 shopping list are the two screens that show what the website can't do, so they're third and
@@ -110,6 +111,29 @@ fifth in the set — reorder them forward in Play Console if you'd rather lead w
 These are real Pixel 8a captures of the signed release build with real data, in light
 theme. A dark set is in `store/screenshots/dark-alternate/` if you'd rather; swap the whole
 set rather than mixing. See `store/README.md`.
+
+**Label the icon and the feature graphic as AI-generated; not the screenshots.** Play
+declares this per asset, so it isn't one blanket answer.
+
+`assets/brand/logo.jpg` — the circular badge everything visual descends from — came from an
+AI image generator. The icon is cropped straight out of it and the feature graphic
+composites it, so both are AI-derived and get labelled. `make-icons.py` and
+`make-feature-graphic.py` are plain PIL (flood-fill, crop, scale, text in real font files),
+which adds no AI but can't launder it out either.
+
+The seven screenshots are clean: real device captures of the running app, and the badge
+never renders in the UI — the Discover header is a *wordmark* set in Bricolage Grotesque,
+and the rest is the blog's food photography. Verified by eye, not assumed.
+
+Two edges. The icons *inside* the APK (`assets/icon.png`, the adaptive foreground, the
+monochrome layer) descend from the same badge, but they ship in the bundle rather than
+through a Console content flow, so this field doesn't cover them. And the **full
+description was AI-drafted** and edited since; Google's page says "Visual assets: Images
+and videos" in one place and "images, text, or video" in another, so if Console offers a
+text option the honest answer there is yes.
+
+Unlike the health declaration, over-declaring here is cheap — a label carries no ongoing
+obligation. When unsure, tick it.
 
 **The video field stays empty.** It's optional, and it takes the *first* slot in the
 listing — it plays before the screenshots, as a play button over the feature graphic. Play
