@@ -101,6 +101,7 @@ serve. Play splits the AAB per-device, so your users download noticeably less.
 | Phone screenshots | 2–8; each side 320–3840px, ratio no taller than 2:1 | The seven in `store/screenshots/` |
 | Category | one | *Food & Drink* |
 | Tags | up to 5 | **`Recipe`** and **`Food & drink`** — only those two, see below |
+| Video | optional | **Leave blank** — see below |
 
 Screenshots are the single biggest lever on install rate. Cook Mode and the aisle-grouped
 shopping list are the two screens that show what the website can't do, so they're third and
@@ -109,6 +110,20 @@ fifth in the set — reorder them forward in Play Console if you'd rather lead w
 These are real Pixel 8a captures of the signed release build with real data, in light
 theme. A dark set is in `store/screenshots/dark-alternate/` if you'd rather; swap the whole
 set rather than mixing. See `store/README.md`.
+
+**The video field stays empty.** It's optional, and it takes the *first* slot in the
+listing — it plays before the screenshots, as a play button over the feature graphic. Play
+wants it to "show the actual in-app experience... within the first 10 seconds", so a recipe
+video would show food rather than the app and set exactly the wrong expectation. It also
+has to have ads switched off for as long as it's linked, and this app exists partly to send
+people *to* the channel — demonetising a working recipe video to decorate a listing is a
+bad trade. Note the field takes one video URL (`youtube.com/watch?v=ID`, no extra
+parameters); a channel or playlist URL is rejected outright.
+
+If it's ever worth filling, the right clip is a 20–30s screen recording of the app —
+Discover, a recipe, Cook Mode firing a timer, the aisle-grouped list — captured with
+`adb shell screenrecord` and driven through the deep links in `CLAUDE.md`, the same way the
+screenshots were.
 
 **Two tags, not five.** Google asks for the tags "most strongly associated with your app",
 and its test is that a stranger should see why a tag fits from the listing alone. Only
