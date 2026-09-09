@@ -1,8 +1,8 @@
 # Chop the Greens — project status
 
 **Single source of truth for what's done and what's left.** Update this file when state
-changes. Last updated: **8 September 2026** (v5 — device-verified icon, real on-device
-screenshots, Firebase half-wired).
+changes. Last updated: **9 September 2026** (v5.1 — Firebase wired and sign-in verified on
+hardware, first-save prompt, Data Safety answers settled).
 
 - **What it is:** an Expo / React Native cooking app for
   [chopthegreens.com](https://chopthegreens.com), shipping to Google Play.
@@ -10,6 +10,69 @@ screenshots, Firebase half-wired).
   Pushes use the `github-bull88` SSH alias (`~/.ssh/bull88_deploy`); the default key
   authenticates as `CoinTranscend`, which has read but **not** write on that org.
 - **Goal:** Google Play release.
+
+---
+
+## ▶ Pick up here
+
+**State as of 9 September 2026, 00:40.** Working tree is clean *except* for one deliberate
+hold; `main` is pushed to
+[bull88protocol/chopthegreen](https://github.com/bull88protocol/chopthegreen).
+
+### One file is uncommitted on purpose
+
+`app.json` carries the live Firebase config, including the API key. It is **modified but
+not committed**, waiting on the key being restricted in Google Cloud Console
+(`SYNC-SETUP.md` step 8b). GitHub secret scanning already flagged the *previous* project's
+key, and committing an unrestricted one walks straight back into that.
+
+```bash
+git status --short      # expect exactly: ` M app.json`
+git diff app.json       # the seven expo.extra values
+```
+
+**If the key has been restricted since:** commit and push it, nothing else needed.
+**If not:** leave it alone. The build works from the working tree regardless.
+
+### The two things actually blocking a release
+
+| | What | Who |
+|---|---|---|
+| 1 | **Host `PRIVACY.md`** at a public URL (e.g. `chopthegreens.com/app-privacy/`). Play needs it for both the privacy policy field *and* the account-deletion requirement that answering "OAuth" triggers. The doc is finished — contact address is filled in. | Sunny |
+| 2 | **Create Firestore + publish the rules** (`SYNC-SETUP.md` step 6). Until then sign-in succeeds but the backup write fails with `permission-denied` and the account sheet reads "Sync problem". | Sunny |
+
+Everything else — code, icons, screenshots, feature graphic, signed artifacts, listing copy,
+Data Safety answers — is done and documented.
+
+### Verified on hardware, and what wasn't
+
+Sign-in was driven end to end on the Pixel 8a: account button appears, sheet opens, the
+Google account picker opens titled "to continue to Chop the Greens" (which is the proof the
+web client ID and SHA-1 are both correct — `DEVELOPER_ERROR` is what you get when they
+aren't), and cancelling returns cleanly.
+
+**The one untested path is the Firestore write.** Completing it means picking one of the
+account entries in the Google picker, which binds an identity and writes a real document —
+that's Sunny's call to make, not something to do unprompted. Ask before tapping through.
+
+### Device state
+
+The Pixel was left as found: light theme, screen timeout restored, nothing signed in,
+shopping list cleared (on request), and four recipes saved — Paneer Butter Masala (1857),
+Paneer Tikka Bowls (19677), Air Fryer Corn Ribs (12541), Eggless Banana Bread (6776). The
+installed build is current. See `CLAUDE.md` for how to drive it over adb.
+
+### If you change app code
+
+Rebuild both artifacts and restage them, as two separate Gradle invocations — the reason is
+in `CLAUDE.md`:
+
+```bash
+export ANDROID_HOME=$HOME/Android/Sdk
+cd android && ./gradlew bundleRelease && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a
+cd .. && cp android/app/build/outputs/bundle/release/app-release.aab dist-release/chopthegreens-1.0.0-play.aab
+cp android/app/build/outputs/apk/release/app-release.apk dist-release/chopthegreens-1.0.0-arm64.apk
+```
 
 ---
 
@@ -397,9 +460,10 @@ python3 scripts/make-screenshots.py                   # store/screenshots/*.png
 
 | File | Contents |
 |---|---|
+| `CLAUDE.md` | Conventions and the rules that aren't obvious from the code — read with this file |
 | `README.md` | Architecture, the data-cleaning table, build instructions |
 | `PLAYSTORE.md` | Full Play submission path, store listing copy, data-safety answers |
-| `PRIVACY.md` | Privacy policy draft to host (needs a contact email) |
-| `SYNC-SETUP.md` | The ~20 min of Firebase setup that turns Google sign-in on |
+| `PRIVACY.md` | Privacy policy, finished — just needs hosting at a public URL |
+| `SYNC-SETUP.md` | Firebase setup for Google sign-in — mostly done; Firestore + key restriction remain |
 | `store/README.md` | What each listing asset is and which Play field it goes in |
 | `STATUS.md` | This file — what's done, what's left |
