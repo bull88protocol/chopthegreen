@@ -180,6 +180,23 @@ answers, so they have to describe what you actually ship — if you later blank 
 
 **Shipping with sync configured — this is your case:**
 
+First, the *Data collection and security* screen:
+
+| Question | Answer | Why |
+|---|---|---|
+| Collects or shares required user data types? | **Yes** | Google name/email/photo, plus saves, list and plan in Firestore |
+| All user data encrypted in transit? | **Yes** | Every URL in the app and all 3,743 in the live feed are `https`; the release manifest sets no `usesCleartextTraffic` and ships no network-security config, so Android 9+ blocks plaintext outright. Firebase Auth and Firestore are TLS. |
+| Methods of account creation | **OAuth** — and nothing else | Google Sign-In is OAuth 2.0. There is no password path in the app: no `createUserWithEmail`, no `signInWithEmail`, no password field. All three "Username and…" options and "Other" are wrong. |
+
+> **Answering OAuth triggers Play's account-deletion requirement.** You'll be asked for a
+> URL where users can request deletion of their account and data — an in-app route alone
+> doesn't satisfy it. The hosted privacy policy answers this: `PRIVACY.md` has a
+> *"Deleting your data"* section naming the contact address, so the same
+> `chopthegreens.com/app-privacy/` URL serves for both the privacy policy and the deletion
+> request.
+
+Then the per-data-type table:
+
 | Question | Answer |
 |---|---|
 | Collects or shares user data? | **Yes** (only for users who choose to sign in) |
