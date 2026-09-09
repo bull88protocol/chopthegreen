@@ -47,12 +47,12 @@
       "typedRoutes": true
     },
     "extra": {
-      "_comment": "Firebase / Google sign-in \u2014 see SYNC-SETUP.md. Sync stays OFF until BOTH firebaseAppId and googleWebClientId are filled in; the rest are already set from the chopthegreens project.",
-      "firebaseApiKey": "AIzaSyAkJE60gl0aCFCtIwQZWXpnco7h5rXygvM",
-      "firebaseAuthDomain": "chopthegreens.firebaseapp.com",
-      "firebaseProjectId": "chopthegreens",
-      "firebaseStorageBucket": "chopthegreens.firebasestorage.app",
-      "firebaseMessagingSenderId": "236481132144",
+      "_comment": "Firebase / Google sign-in \u2014 see SYNC-SETUP.md. Sync stays OFF while these are blank, which is a supported way to ship. Fill in all seven to turn it on.",
+      "firebaseApiKey": "",
+      "firebaseAuthDomain": "",
+      "firebaseProjectId": "",
+      "firebaseStorageBucket": "",
+      "firebaseMessagingSenderId": "",
       "firebaseAppId": "",
       "googleWebClientId": ""
     }

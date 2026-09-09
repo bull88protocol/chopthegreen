@@ -12,31 +12,26 @@ Budget about 20 minutes. All of it is free at your scale.
 
 ---
 
-## Where this stands (8 September 2026)
+## What you have to come back with
 
-You've created the project and registered the Android app. From the
-`google-services.json` you sent, these are already in `app.json` and correct:
+Everything below produces exactly **seven values**, all of which go into
+`expo.extra` in `app.json`. Nothing else in the project needs touching.
 
-| | |
-|---|---|
-| Project ID | `chopthegreens` |
-| Project number / sender ID | `236481132144` |
-| Web API key | `AIzaSyAkJE60gl0aCFCtIwQZWXpnco7h5rXygvM` |
-| Storage bucket | `chopthegreens.firebasestorage.app` |
+| `app.json` key | Comes from | Looks like |
+|---|---|---|
+| `firebaseApiKey` | Web app config (step 3) | `AIza…` |
+| `firebaseAuthDomain` | Web app config | `<project-id>.firebaseapp.com` |
+| `firebaseProjectId` | Web app config | `chop-the-greens` |
+| `firebaseStorageBucket` | Web app config | `<project-id>.firebasestorage.app` |
+| `firebaseMessagingSenderId` | Web app config | 12 digits |
+| `firebaseAppId` | Web app config | `1:…:web:…` — **`web`, not `android`** |
+| `googleWebClientId` | Google sign-in (step 5) | `…-….apps.googleusercontent.com` |
 
-**Three things are still missing, and sync stays off until they're done.** The giveaway is
-that `oauth_client` in your `google-services.json` is an empty array — that field only
-fills in once Google sign-in is enabled *and* a SHA-1 is registered.
+Two more things have to be *true* but produce no value: the SHA-1 must be registered
+(step 4) and Firestore must exist with the rules published (step 6). Skip either and
+sign-in compiles fine and then fails on the phone.
 
-| # | Missing | Where it comes from | Goes into |
-|---|---|---|---|
-| A | **Web client ID** | Step 3 — enabling Google sign-in auto-creates it | `extra.googleWebClientId` |
-| B | **Web app ID** | Step 2b — registering a Web app (`</>`) | `extra.firebaseAppId` |
-| C | **SHA-1 registered** | Step 2a — paste the fingerprint onto the Android app | Firebase console only |
-| D | **Firestore + rules** | Step 4 | Firebase console only |
-
-Send me A and B and I'll fill them in and rebuild. C and D don't produce a value — they
-just have to be true, or sign-in fails at runtime.
+If you paste me the whole `firebaseConfig` block plus the Web client ID, I'll wire it in.
 
 ---
 
@@ -59,49 +54,92 @@ keytool -list -v -keystore credentials/chopthegreens-upload.keystore \
 [console.firebase.google.com](https://console.firebase.google.com) → **Add project** →
 name it `chop-the-greens`. Google Analytics is optional; skip it unless you want it.
 
-## 2. Register *two* apps — Android and Web
+## 2. Why you register the app twice
 
-This is the step that trips people up, and it's worth being precise about, because the two
-registrations do completely different jobs. You need both.
+The single most confusing part of this, so it's worth 30 seconds up front. You register
+**two** apps in one Firebase project, and they do unrelated jobs:
 
-### 2a. Android app — done, but add the SHA-1
+- The **Web app** exists purely to hand you a config block. This app talks to Firebase
+  through the **JS SDK**, so a web app ID is what it wants. Registering only an Android app
+  leaves you with an ID like `1:…:android:…`, which the JS SDK will take and then fail on
+  later when Firestore asks the Installations service for a token.
+- The **Android app** exists purely to hold the **SHA-1 fingerprint**. That's what lets
+  Google's native sign-in sheet trust your APK. Nothing reads its
+  `google-services.json` — you can download it or not, it makes no difference.
 
-**Add app → Android** (you've done this):
+You need both. Do the Web one first; it's the one that unblocks me.
 
-- **Package name:** `com.chopthegreens.app`
-- **SHA-1 certificate fingerprint:** `40:7F:CE:59:A0:3E:4B:B0:C1:70:CF:F8:42:7F:12:F7:7D:DA:94:A7`
+## 3. Register the Web app — do this one first
 
-If you skipped the fingerprint at creation, add it now: **Project settings → Your apps →**
-the Android app **→ Add fingerprint**. Without it, Google sign-in returns
-`DEVELOPER_ERROR` on the device no matter what else is right.
+Project overview → **Add app** → the **`</>`** (web) icon.
 
-You do **not** need `google-services.json` itself. This app talks to Firebase through the
-**JS SDK**, not the native one, so nothing reads that file — which is exactly why the
-Android app alone isn't enough.
+| Field | What to put |
+|---|---|
+| App nickname | Anything. `Chop the Greens` is fine — it's only a console label. |
+| Also set up Firebase Hosting | **Leave unchecked.** You're not hosting anything. |
 
-### 2b. Web app — this is the one that's missing
+Click **Register app**. The next screen ("Add Firebase SDK") shows a code block containing:
 
-**Add app → Web** (the `</>` icon). Call it anything; skip Firebase Hosting.
+```js
+const firebaseConfig = {
+  apiKey: "AIza…",
+  authDomain: "…firebaseapp.com",
+  projectId: "…",
+  storageBucket: "…firebasestorage.app",
+  messagingSenderId: "…",
+  appId: "1:…:web:…"
+};
+```
 
-The JS SDK wants a *web* app ID. The `mobilesdk_app_id` in your `google-services.json`
-(`1:236481132144:android:cdfc595e…`) is an **Android** app ID — the `:android:` in the
-middle is the tell. Handing that to the JS SDK is the kind of mismatch that works right up
-until Firestore asks the Installations service for a token and gets refused. Register the
-Web app and use the `1:236481132144:web:…` ID it gives you.
+**Copy that whole block** — it's six of the seven values. Ignore the `npm install` and
+`import` lines; the app already has the SDK. Then **Continue to console**.
 
-> **Important, after your first Play upload.** Play App Signing re-signs your app with
-> *Google's* key, so the SHA-1 users actually run under is different from your upload key.
-> Sign-in will fail on Play-installed builds until you add it: Play Console →
-> **Test and release → Setup → App signing** → copy the **App signing key certificate**
-> SHA-1 → paste it into Firebase → Project settings → Your Android app → **Add fingerprint**.
-> Keep both fingerprints registered — the upload one covers sideloaded builds.
+You can get this back any time from **⚙ Project settings → General → Your apps → the web
+app → SDK setup and configuration → Config**.
 
-## 3. Enable Google sign-in
+## 4. Register the Android app — this is where the SHA-1 goes
 
-**Build → Authentication → Get started → Sign-in method → Google → Enable.** Set a support
-email and save.
+**Add app** again → the **Android** icon.
 
-## 4. Create the database
+| Field | What to put |
+|---|---|
+| Android package name | `com.chopthegreens.app` — must match exactly, it's not editable later |
+| App nickname | Optional |
+| Debug signing certificate SHA-1 | `40:7F:CE:59:A0:3E:4B:B0:C1:70:CF:F8:42:7F:12:F7:7D:DA:94:A7` |
+
+Despite the word "Debug" on that field, paste the upload-key SHA-1 above. Firebase just
+stores fingerprints; it doesn't care which build they came from.
+
+Click **Register app**, then click straight through **Download google-services.json**,
+**Add Firebase SDK** and **Next steps** — none of it applies here. Nothing breaks if you
+download the file; it simply isn't used.
+
+Missed the fingerprint? Add it later at **⚙ Project settings → General → Your apps →** the
+Android app **→ Add fingerprint**.
+
+> **After your first Play upload, come back and add a second fingerprint.** Play App
+> Signing re-signs your app with *Google's* key, so the SHA-1 your users actually run under
+> isn't your upload key. Play Console → **Test and release → Setup → App signing** → copy
+> the **App signing key certificate** SHA-1 → add it here too. Keep both: the upload one
+> covers builds you sideload yourself. Sign-in works in your testing and then mysteriously
+> fails for everyone installing from Play if you skip this.
+
+## 5. Enable Google sign-in — this is what mints the last value
+
+**Build → Authentication → Get started → Sign-in method → Google → Enable.**
+
+Set a **project public-facing name** (users see this on the Google consent sheet — put
+`Chop the Greens`, not the project ID) and pick a **support email**, then **Save**.
+
+Now reopen that same **Google** row and expand **Web SDK configuration**. The
+**Web client ID** sitting there is the seventh value — it's the one thing you can't get
+from the config block in step 3.
+
+**It must be the *web* client ID, not the Android one.** The native sign-in library uses
+the web client to mint an ID token that Firebase will accept; an Android client ID here
+produces `DEVELOPER_ERROR` at sign-in, which is an unhelpfully generic thing to debug.
+
+## 6. Create the database
 
 **Build → Firestore Database → Create database.** Pick a region near your readers
 (`us-east1` is a reasonable default) and start in **production mode** — the rules below
@@ -124,42 +162,42 @@ service cloud.firestore {
 That is the whole security model, and it matters — without it, anyone could read everyone's
 lists. Don't leave the database in test mode.
 
-## 5. Collect the config
+## 7. If you lost any of it
 
-**Project settings (gear) → General**:
+Nothing here is one-shot; every value can be re-read.
 
-- Scroll to **Your apps → the Web app from step 2b → SDK setup and configuration →
-  Config**. That panel only exists for a Web app, which is why step 2b matters. Everything
-  there but `appId` is already in `app.json`; **`appId` is the one to copy** — it should
-  start `1:236481132144:web:`.
-- Under **Your apps**, find the **Web client ID** (it looks like
-  `1234567890-abc123.apps.googleusercontent.com`). If there isn't one, open
+- **The six config values** — ⚙ **Project settings → General → Your apps →** the web app
+  **→ SDK setup and configuration → Config**.
+- **The Web client ID** — **Authentication → Sign-in method → Google → Web SDK
+  configuration**. Or, if that section is somehow empty,
   [Google Cloud Console → Credentials](https://console.cloud.google.com/apis/credentials)
-  for the same project; enabling Google sign-in in step 3 creates a
-  *Web client (auto created by Google Service)* — that's the one.
+  on the same project: enabling Google sign-in creates an OAuth client literally named
+  *Web client (auto created by Google Service)*.
 
-**Use the Web client ID, not the Android one.** This trips everybody up: the native
-sign-in library needs the *web* client to mint an ID token that Firebase will accept. An
-Android client ID here produces a `DEVELOPER_ERROR` at sign-in.
+## 8. Paste into `app.json`
 
-## 6. Paste into `app.json`
+The keys are already there and blank. Fill in all seven — the app checks four of them and
+stays switched off if any is empty.
 
 ```json
 "extra": {
   "firebaseApiKey": "AIza…",
   "firebaseAuthDomain": "chop-the-greens.firebaseapp.com",
   "firebaseProjectId": "chop-the-greens",
-  "firebaseStorageBucket": "chop-the-greens.appspot.com",
-  "firebaseMessagingSenderId": "1234567890",
-  "firebaseAppId": "1:1234567890:android:abcdef",
-  "googleWebClientId": "1234567890-abc123.apps.googleusercontent.com"
+  "firebaseStorageBucket": "chop-the-greens.firebasestorage.app",
+  "firebaseMessagingSenderId": "236481132144",
+  "firebaseAppId": "1:236481132144:web:abcdef123456",
+  "googleWebClientId": "236481132144-abc123.apps.googleusercontent.com"
 }
 ```
 
-These are **not secrets** — Firebase web config values are public identifiers, and your data
-is protected by the rules in step 4, not by hiding them. Committing them is normal and fine.
+Note `:web:` in `firebaseAppId`. If yours says `:android:` you've copied it from
+`google-services.json` instead of the web app's config — go back to step 3.
 
-## 7. Rebuild
+These are **not secrets** — Firebase web config values are public identifiers, and your data
+is protected by the rules in step 6, not by hiding them. Committing them is normal and fine.
+
+## 9. Rebuild
 
 ```bash
 export ANDROID_HOME=$HOME/Android/Sdk
@@ -176,7 +214,7 @@ Two bits of UI appear as soon as the config is present, and not before:
 
 Nothing else changes. No feature moves behind the login.
 
-## 8. Test it
+## 10. Test it
 
 1. Sign in, save a couple of recipes, add something to the shopping list.
 2. Check Firestore → `users/<your-uid>` — you should see `saved`, `list`, `plan`, `updatedAt`.
