@@ -23,10 +23,11 @@ All seven values are in `app.json` and `syncEnabled` is now **true**. Project
 | ✅ | Android app registered, SHA-1 added — `certificate_hash` in `google-services.json` verified against `credentials/chopthegreens-upload.keystore` |
 | ✅ | Google sign-in enabled; `oauth_client` now carries a `client_type: 1` (Android) and `client_type: 3` (Web) entry |
 | ✅ | `googleWebClientId` = the `client_type: 3` value |
+| ✅ | **Firestore database + rules** (step 6) — created and published |
+| ✅ | **Sign-in and backup verified end to end** — signed in on hardware and the sync round trip works |
 
 | Still open | |
 |---|---|
-| ⏳ | **Firestore database + rules** (step 6). Sign-in works without it; the *backup* then fails with `permission-denied` and the account sheet shows "Sync problem". |
 | ⏳ | **API key restriction** (step 8b). Do this before the config is committed. |
 
 The walkthrough below is kept for the next project, and because the traps in it are

@@ -1,8 +1,8 @@
 # Chop the Greens — project status
 
 **Single source of truth for what's done and what's left.** Update this file when state
-changes. Last updated: **9 September 2026** (v5.1 — Firebase wired and sign-in verified on
-hardware, first-save prompt, Data Safety answers settled).
+changes. Last updated: **9 September 2026** (v5.2 — Firestore live and sync verified end to
+end; one release blocker left, and it isn't code).
 
 - **What it is:** an Expo / React Native cooking app for
   [chopthegreens.com](https://chopthegreens.com), shipping to Google Play.
@@ -15,7 +15,7 @@ hardware, first-save prompt, Data Safety answers settled).
 
 ## ▶ Pick up here
 
-**State as of 9 September 2026, 00:40.** Working tree is clean *except* for one deliberate
+**State as of 9 September 2026.** Working tree is clean *except* for one deliberate
 hold; `main` is pushed to
 [bull88protocol/chopthegreen](https://github.com/bull88protocol/chopthegreen).
 
@@ -34,32 +34,43 @@ git diff app.json       # the seven expo.extra values
 **If the key has been restricted since:** commit and push it, nothing else needed.
 **If not:** leave it alone. The build works from the working tree regardless.
 
-### The two things actually blocking a release
+### Nothing is blocking a release any more
 
-| | What | Who |
-|---|---|---|
-| 1 | **Host `PRIVACY.md`** at a public URL (e.g. `chopthegreens.com/app-privacy/`). Play needs it for both the privacy policy field *and* the account-deletion requirement that answering "OAuth" triggers. The doc is finished — contact address is filled in. | Sunny |
-| 2 | **Create Firestore + publish the rules** (`SYNC-SETUP.md` step 6). Until then sign-in succeeds but the backup write fails with `permission-denied` and the account sheet reads "Sync problem". | Sunny |
+The privacy policy is **live** at
 
-Everything else — code, icons, screenshots, feature graphic, signed artifacts, listing copy,
-Data Safety answers — is done and documented.
+> https://chopthegreens.com/privacy-policy-chop-the-greens/
 
-### Verified on hardware, and what wasn't
+Verified 9 September 2026: publicly reachable without a login, names the app, describes the
+Google sign-in data and the Firestore backup, and carries the *"Deleting your data"*
+section. That one URL satisfies **both** Play fields — *Policy → App content → Privacy
+policy* **and** the account-deletion URL that answering "OAuth" on Data Safety triggers.
 
-Sign-in was driven end to end on the Pixel 8a: account button appears, sheet opens, the
-Google account picker opens titled "to continue to Chop the Greens" (which is the proof the
-web client ID and SHA-1 are both correct — `DEVELOPER_ERROR` is what you get when they
-aren't), and cancelling returns cleanly.
+Code, icons, screenshots, feature graphic, signed artifacts, listing copy, Data Safety
+answers and the policy are all done. What's left is Play Console work and one tidy-up.
 
-**The one untested path is the Firestore write.** Completing it means picking one of the
-account entries in the Google picker, which binds an identity and writes a real document —
-that's Sunny's call to make, not something to do unprompted. Ask before tapping through.
+> The contact address renders through Cloudflare's email obfuscation, so it reads
+> "[email protected]" to anything without JavaScript and decodes to
+> `sungari.001@gmail.com` in a real browser. Reviewers use a browser, so this is fine — but
+> if you want it readable to everything, turn off Scrape Shield for that page.
+
+### Sync is verified end to end (9 September 2026)
+
+Sunny created the Firestore database, published the rules (`SYNC-SETUP.md` step 6), and
+tested sync on hardware: **sign-in completes and the backup works.** That closes the last
+open path in the feature — earlier passes could only get as far as the Google account
+picker, because completing it binds a real identity and writes a real document, which
+wasn't a call to make unprompted.
+
+So the account sheet no longer reads "Sync problem", and the `permission-denied` failure
+mode described in older notes is gone.
 
 ### Device state
 
-The Pixel was left as found: light theme, screen timeout restored, nothing signed in,
-shopping list cleared (on request), and four recipes saved — Paneer Butter Masala (1857),
-Paneer Tikka Bowls (19677), Air Fryer Corn Ribs (12541), Eggless Banana Bread (6776). The
+A real Google account was signed in on the Pixel during that test, so a `users/<uid>`
+document now exists in Firestore and the device is no longer in the signed-out state
+earlier notes describe. Otherwise as found: light theme, screen timeout restored, shopping
+list cleared (on request), and four recipes saved — Paneer Butter Masala (1857), Paneer
+Tikka Bowls (19677), Air Fryer Corn Ribs (12541), Eggless Banana Bread (6776). The
 installed build is current. See `CLAUDE.md` for how to drive it over adb.
 
 ### If you change app code
@@ -78,8 +89,8 @@ cp android/app/build/outputs/apk/release/app-release.apk dist-release/chopthegre
 
 ## ⏳ What's left
 
-Seven of the nine items are closed. What remains needs your Google login — nothing is
-blocked on code or assets.
+Seven of the ten items are closed. The three that remain are yours — a file copy, a
+Console setting and the upload itself. Nothing is blocked on code, assets or docs.
 
 | # | Task | Why it's blocking | Who |
 |---|---|---|---|
@@ -87,17 +98,19 @@ blocked on code or assets.
 | ~~2~~ | ~~Drop in the real logo~~ | **Done** — `assets/brand/logo.jpg`, icons regenerated from it. | ✅ |
 | ~~3~~ | ~~Feature graphic, 1024×500~~ | **Done** — `store/feature-graphic.png`, built by `scripts/make-feature-graphic.py`. | ✅ |
 | ~~4~~ | ~~2–8 phone screenshots~~ | **Done** — 7 captured on the Pixel 8a. Light set in `store/screenshots/`, dark in `dark-alternate/`. | ✅ |
-| 5 | **Host the privacy policy** | Play requires a public URL. `PRIVACY.md` is finished — contact email is `sungari.001@gmail.com`. Just publish it at e.g. `chopthegreens.com/app-privacy/`. | You |
+| ~~5~~ | ~~Host the privacy policy~~ | **Done** — live at [chopthegreens.com/privacy-policy-chop-the-greens/](https://chopthegreens.com/privacy-policy-chop-the-greens/), verified reachable. Serves as both the privacy policy URL and the account-deletion URL. | ✅ |
 | 6 | **Create the app in Play Console** | Upload `dist-release/chopthegreens-1.0.0-play.aab` to Internal testing. Everything it asks for now exists — see `PLAYSTORE.md`. | You |
 | ~~7~~ | ~~Commit the repo~~ | **Done** — initial commit `b4abb26`, 79 files, pushed to `bull88protocol/chopthegreen`. `credentials/`, `dist-release/` and `android/` stay ignored. | ✅ |
 | ~~8~~ | ~~Re-verify on the Pixel~~ | **Done** — installed and screenshotted on hardware. | ✅ |
-| 9 | **Finish Firebase** | Mostly done — project `chop-the-greens`, all seven values wired, `syncEnabled` is **true**, SHA-1 verified against the keystore. Two console jobs left: create **Firestore + publish the rules**, and **restrict the API key**. | You |
+| ~~9~~ | ~~Finish Firebase~~ | **Done** — project `chop-the-greens`, all seven values wired, `syncEnabled` **true**, SHA-1 verified, Firestore created with rules published, and sign-in + backup tested on hardware. | ✅ |
+| 10 | **Restrict the API key** | `SYNC-SETUP.md` step 8b. Not a release blocker — it's what's holding `app.json` uncommitted. | You |
 
-**Sync is on as of 9 September 2026.** That changes two things outside the code: the Play
-**Data Safety** form moves to the "collects data" answers, and the full description's
-closing line ("No account…") is now false. Both are handled in `PLAYSTORE.md`. If you'd
-rather ship v1 without accounts after all, blanking `extra` in `app.json` reverts every bit
-of it — no code change, no migration.
+**Sync is on and working as of 9 September 2026.** That changed two things outside the
+code, both now handled in `PLAYSTORE.md`: the Play **Data Safety** form takes the "collects
+data" answers, and the full description's closing line no longer claims "No account…" —
+that draft is corrected in place and can be pasted whole. If you'd rather ship v1 without
+accounts after all, blanking `extra` in `app.json` reverts every bit of it — no code
+change, no migration — and the old closing line becomes true again.
 
 ### Settled decisions
 
@@ -135,6 +148,28 @@ of it — no code change, no migration.
 | Social | YouTube / Instagram / Pinterest / TikTok at the foot of Discover; per-recipe share sheet links the blog post |
 | Sync | *Optional* Google sign-in backs up saves/list/plan to Firestore. Off unless configured — see `SYNC-SETUP.md` |
 | Sign-in prompts | A dismissible card on Saved / List / Plan, shown only when there's something to lose. Nothing is ever gated behind an account |
+
+### v5.3 — privacy policy published (9 September 2026)
+
+Hosted at [chopthegreens.com/privacy-policy-chop-the-greens/](https://chopthegreens.com/privacy-policy-chop-the-greens/) and verified: HTTP 200, no login, names the app, and covers the sign-in
+data, the Firestore backup and deletion. The **last release blocker is closed** — nothing
+outstanding now needs code or assets.
+
+Docs updated from the placeholder `chopthegreens.com/app-privacy/` to the real path.
+
+### v5.2 — Firestore live, sync verified (9 September 2026)
+
+Sunny created the Firestore database and published the rules, then signed in and tested
+sync on the Pixel. Sign-in completes and the backup writes — the one path that had never
+been exercised end to end, because finishing it binds a real Google identity.
+
+The listing copy was corrected at the same time: the full description in `PLAYSTORE.md`
+ended "No account. No ads. No tracking.", which sync made false, and the fix used to sit as
+a warning *below* the draft where a copy-paste would miss it. The draft now carries the
+correct ending inline.
+
+That left one release blocker, hosting `PRIVACY.md` — closed the same day, see v5.3 — and
+one tidy-up, restricting the API key, which is what keeps `app.json` out of a commit.
 
 ### v5.1 — sign-in prompt at the first save (9 September 2026)
 
@@ -463,7 +498,7 @@ python3 scripts/make-screenshots.py                   # store/screenshots/*.png
 | `CLAUDE.md` | Conventions and the rules that aren't obvious from the code — read with this file |
 | `README.md` | Architecture, the data-cleaning table, build instructions |
 | `PLAYSTORE.md` | Full Play submission path, store listing copy, data-safety answers |
-| `PRIVACY.md` | Privacy policy, finished — just needs hosting at a public URL |
+| `PRIVACY.md` | Privacy policy — the source for what's published at [chopthegreens.com/privacy-policy-chop-the-greens/](https://chopthegreens.com/privacy-policy-chop-the-greens/) |
 | `SYNC-SETUP.md` | Firebase setup for Google sign-in — mostly done; Firestore + key restriction remain |
 | `store/README.md` | What each listing asset is and which Play field it goes in |
 | `STATUS.md` | This file — what's done, what's left |

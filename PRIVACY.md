@@ -105,9 +105,9 @@ Questions, or to request deletion: **sungari.001@gmail.com**
 
 ---
 
-*Publish this at a public URL — for example `https://chopthegreens.com/app-privacy/` — and
-paste that link into Google Play Console under **Policy → App content → Privacy policy**.
-Play requires the URL to be publicly reachable without a login.*
+*Published at https://chopthegreens.com/privacy-policy-chop-the-greens/ — that's the live copy Play points at. This file is the source: edit here
+and re-publish. The same URL goes in **two** Play fields — Policy → App content → Privacy
+policy, and the account-deletion URL on the Data Safety form.*
 
 *One thing left before publishing: if you ship **without** sync configured, delete the
 "If you choose to sign in with Google" and "Deleting your data" sections, since they

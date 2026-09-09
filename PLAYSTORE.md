@@ -95,7 +95,7 @@ serve. Play splits the AAB per-device, so your users download noticeably less.
 |---|---|---|
 | App name | 30 | `Chop the Greens` |
 | Short description | 80 | `Vegetarian Indian recipes with hands-free cook mode and smart shopping lists.` |
-| Full description | 4000 | Draft below |
+| Full description | 4000 | Ready to paste, below |
 | App icon | 512×512 PNG | `store/icon-512.png` |
 | Feature graphic | 1024×500 PNG, no alpha | `store/feature-graphic.png` |
 | Phone screenshots | 2–8; each side 320–3840px, ratio no taller than 2:1 | The seven in `store/screenshots/` |
@@ -109,7 +109,7 @@ theme. A dark set is in `store/screenshots/dark-alternate/` if you'd rather; swa
 set rather than mixing. See `store/README.md`.
 
 <details>
-<summary>Full description draft</summary>
+<summary>Full description — ready to paste</summary>
 
 ```
 Cook vibrant vegetarian Indian food without the faff.
@@ -139,27 +139,28 @@ Drop recipes onto the next seven days, then turn the whole week into one shoppin
 WORKS OFFLINE
 Recipes are saved to your phone, so your kitchen's dead spot doesn't matter.
 
-No account. No ads. No tracking.
-```
-</details>
-
-**⚠️ The draft above ends "No account. No ads. No tracking." — that line is now wrong.**
-The app offers a Google sign-in, and Play treats listing copy as a claim it can hold you
-to. Use this ending instead:
-
-```
 No ads. No tracking. Signing in is optional — it only backs up your own saved recipes,
 shopping list and meal plan, and every feature works without it.
 ```
+</details>
 
-That wording is deliberate: it keeps the two claims that are still absolutely true, and
-describes the account as what it is — optional, and a backup rather than a gate.
+The block above is complete and ready to paste — no edits needed.
 
-### Privacy policy — required
+**Don't restore the old closing line.** It used to read "No account. No ads. No tracking.",
+which sync made false. Play treats listing copy as a claim it can hold you to, so the
+ending keeps the two claims that are still absolutely true and describes the account as
+what it is — optional, and a backup rather than a gate. If you ever ship without sync by
+blanking `extra` in `app.json`, "No account." becomes true again and can go back.
 
-Play will not publish without a public URL. `PRIVACY.md` in this repo is a ready draft;
-put it on the blog (e.g. `chopthegreens.com/app-privacy/`) and paste that URL into
-*Policy → App content → Privacy policy*.
+### Privacy policy — done
+
+**Live at https://chopthegreens.com/privacy-policy-chop-the-greens/**
+
+Paste it into *Policy → App content → Privacy policy*. `PRIVACY.md` in this repo is the
+source text — edit there and re-publish if it ever changes.
+
+The same URL also answers the **account-deletion requirement** further down this page, so
+it goes into two Play fields, not one.
 
 ### Data safety form
 
@@ -190,10 +191,10 @@ First, the *Data collection and security* screen:
 
 > **Answering OAuth triggers Play's account-deletion requirement.** You'll be asked for a
 > URL where users can request deletion of their account and data — an in-app route alone
-> doesn't satisfy it. The hosted privacy policy answers this: `PRIVACY.md` has a
-> *"Deleting your data"* section naming the contact address, so the same
-> `chopthegreens.com/app-privacy/` URL serves for both the privacy policy and the deletion
-> request.
+> doesn't satisfy it. The published policy answers this: its *"Deleting your data"* section
+> names the contact address, so
+> **https://chopthegreens.com/privacy-policy-chop-the-greens/**
+> goes in both the privacy policy field and the deletion-request field.
 
 Then the per-data-type table:
 
@@ -206,7 +207,7 @@ Then the per-data-type table:
 | App activity → Other user-generated content (saved recipes, list, plan) | Collected, not shared. *App functionality* |
 | Is collection **optional**? | **Yes** — tick "Users can choose whether this data is collected" |
 | Encrypted in transit? | Yes |
-| Can users request deletion? | **Yes** — provide the contact email from `PRIVACY.md` |
+| Can users request deletion? | **Yes** — `sungari.001@gmail.com`, and the policy URL above as the deletion URL |
 
 Do **not** tick anything under Location, Contacts, Messages, or Financial info — the app
 requests only basic profile and email scopes and touches none of that.
@@ -214,6 +215,36 @@ requests only basic profile and email scopes and touches none of that.
 Also relevant: Play requires an in-app **account deletion** route for apps with sign-in. A
 contact email in the privacy policy satisfies this today, but adding an in-app "delete my
 data" button is the more durable answer if you keep sync long-term.
+
+### Health apps declaration — answer "no health features"
+
+The tempting box is *Health and fitness → Nutrition and weight management*, because every
+recipe carries a nutrition panel. Google defines that category as:
+
+> Tools for tracking dietary intake, planning meals, managing diets, and supporting weight
+> loss or weight management goals.
+
+Every verb there is about acting on **the user's own** health data, and this app holds none
+of it — no intake log, no daily or weekly totals, no dietary goals, no weight, height or
+age. The nutrition tab is a passive reproduction of the nine per-serving values the blog
+published, labelled in the UI *"Per {serving}, as published."* The app computes nothing and
+stores nothing. That makes it a recipe attribute like cook time or equipment, not a tool.
+
+**The arguable part is "planning meals",** since there's a Plan tab. Functionally it
+schedules recipes to build a shopping list: no nutritional targets, no calorie budget, and
+the card shows cook time, not calories. Grocery planning, not diet planning. With the app
+in *Food & Drink* rather than *Health & Fitness*, "no health features" is accurate.
+
+**Don't over-declare as a precaution.** Ticking the box routes you to step 2, regional
+requirements, and pulls the app under the Health Content and Services policy — which can
+require a *"not a medical device"* disclaimer in the store description plus regional
+attestations. Those are live obligations you'd then have to meet. The declaration is
+editable later if Google ever disagrees.
+
+**Revisit this answer if the app ever gains** calorie totals, intake logging, dietary goals,
+or anything weight-related. Any one of them flips it. Equally, keep *outcome* claims out of
+the listing — the current copy sells cooking, not health results, which is what keeps this
+clean. ("HEALTHY · SIMPLE · GUILT-FREE" on the icon badge is brand text, not a claim.)
 
 ### Content rating
 
@@ -224,7 +255,10 @@ Fill in the questionnaire — a recipe app rates **Everyone** in every region. T
 - **Ads** — none.
 - **Target audience** — 13+ (avoids the extra Families-policy requirements; the app isn't
   aimed at children).
-- **Government app / financial features / health** — no to all.
+- **Government app / financial features** — no to both.
+- **Health apps declaration** — **"My app does not have any health features."** Everyone has
+  to complete this form, including to certify *no* features, so it can't be skipped. The
+  reasoning is in *Health apps declaration* above; read it before changing the answer.
 - **Notifications** — the app posts local cook timers only. There is no server push, so
   there's nothing to declare beyond the permission itself.
 
@@ -248,9 +282,9 @@ Your account is established, so the long pole is review, not onboarding:
 | Internal testing track | same day, no review |
 | Production review | typically a few days for a new app listing |
 
-Nothing is blocked on assets or code any more. What's left is yours: back up
-`credentials/`, host `PRIVACY.md` at a public URL, decide on sync (`SYNC-SETUP.md`), and
-create the app in Console.
+Nothing is blocked on assets, code, sync or the privacy policy any more — all four are
+done. What's left is yours: back up `credentials/`, restrict the API key
+(`SYNC-SETUP.md` step 8b), and create the app in Console.
 
 ## On signing: this app has its own key
 

@@ -20,7 +20,7 @@ section, which records anything deliberately left uncommitted.
 | `store/` | Play listing assets, ready to upload (see `store/README.md`) |
 | `PLAYSTORE.md` | submission path, listing copy, Data Safety answers |
 | `SYNC-SETUP.md` | the Firebase setup for Google sign-in, screen by screen |
-| `PRIVACY.md` | privacy policy to host; contact is `sungari.001@gmail.com` |
+| `PRIVACY.md` | source for the published policy; contact is `sungari.001@gmail.com` |
 
 ## Checks
 
