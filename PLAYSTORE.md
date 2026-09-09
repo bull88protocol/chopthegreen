@@ -99,6 +99,8 @@ serve. Play splits the AAB per-device, so your users download noticeably less.
 | App icon | 512×512 PNG | `store/icon-512.png` |
 | Feature graphic | 1024×500 PNG, no alpha | `store/feature-graphic.png` |
 | Phone screenshots | 2–8; each side 320–3840px, ratio no taller than 2:1 | The seven in `store/screenshots/` |
+| Category | one | *Food & Drink* |
+| Tags | up to 5 | **`Recipe`** and **`Food & drink`** — only those two, see below |
 
 Screenshots are the single biggest lever on install rate. Cook Mode and the aisle-grouped
 shopping list are the two screens that show what the website can't do, so they're third and
@@ -107,6 +109,20 @@ fifth in the set — reorder them forward in Play Console if you'd rather lead w
 These are real Pixel 8a captures of the signed release build with real data, in light
 theme. A dark set is in `store/screenshots/dark-alternate/` if you'd rather; swap the whole
 set rather than mixing. See `store/README.md`.
+
+**Two tags, not five.** Google asks for the tags "most strongly associated with your app",
+and its test is that a stranger should see why a tag fits from the listing alone. Only
+`Recipe` and `Food & drink` pass; both map to Food & Drink, so they reinforce the category
+instead of pulling against it. `Food delivery` and `Restaurant` are the other Food & Drink
+tags and neither describes this app.
+
+Skip the near-misses: `Shopping` maps to the Shopping category and implies you can buy
+something, and `Lifestyle` is vague enough to be true of anything.
+
+**Never tag `Dieting`, `Weight loss` or `Health & fitness`.** They map to Health & Fitness
+and would publicly contradict the *no health features* declaration recorded below — the
+kind of inconsistency a reviewer notices, and it undoes the reasoning that makes that
+answer defensible.
 
 <details>
 <summary>Full description — ready to paste</summary>
