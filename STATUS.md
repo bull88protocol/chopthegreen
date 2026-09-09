@@ -97,6 +97,24 @@ to be running.
 The phone was left as found: shopping list cleared on request, theme back to light, screen
 timeout restored.
 
+### GitHub flagged the Firebase API key (8 September 2026)
+
+Secret scanning emailed about a *Google API Key* in `app.json` at `b4abb26`. Worth writing
+down what that alert does and doesn't mean, because it will happen again.
+
+A Firebase web API key is a public identifier by design — it ships inside every copy of the
+app, and Google documents committing it as normal. Anyone with the APK has it. Data is
+protected by the Firestore rules, not by the key being unknown.
+
+**The alert is still worth acting on, though**, and the reason isn't Firestore. `AIzaSy…`
+is a *Google Cloud* key, not a Firebase-specific one: unrestricted, it works against any
+API enabled on that project, and some of them bill per request. That's the real exposure.
+`SYNC-SETUP.md` step 8b now covers restricting it to the three APIs this app actually uses,
+which should be done before the next key is committed.
+
+In this instance the key belongs to the abandoned `chopthegreens` project, so deleting that
+project makes it inert regardless.
+
 ### Firebase, half-wired (8 September 2026)
 
 The `chopthegreens` project exists and its non-secret keys are in `app.json` — API key,

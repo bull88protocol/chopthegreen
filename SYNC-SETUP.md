@@ -194,8 +194,34 @@ stays switched off if any is empty.
 Note `:web:` in `firebaseAppId`. If yours says `:android:` you've copied it from
 `google-services.json` instead of the web app's config — go back to step 3.
 
-These are **not secrets** — Firebase web config values are public identifiers, and your data
-is protected by the rules in step 6, not by hiding them. Committing them is normal and fine.
+These are **not secrets** in the usual sense — Firebase web config values are public
+identifiers that ship inside every copy of the app, and your data is protected by the rules
+in step 6, not by hiding them. Google documents this explicitly. Committing them is normal.
+
+**But restrict the API key first — see the next step.** GitHub's secret scanner will email
+you about `AIzaSy…` regardless, because it pattern-matches Google API keys and can't tell a
+Firebase config key from a billable Maps key. More importantly, the alert is pointing at
+something real if the key is left unrestricted.
+
+## 8b. Restrict the API key — 2 minutes, do not skip
+
+An `AIzaSy…` key is a *Google Cloud* API key, not a Firebase-specific one. Left
+unrestricted, it works against **any API enabled on that project**, and some of those bill
+per request. That, not Firestore access, is the actual exposure when the key is public.
+
+[Google Cloud Console → APIs & Services → Credentials](https://console.cloud.google.com/apis/credentials)
+→ the auto-created **Browser key (auto created by Firebase)** → **Edit**:
+
+- **API restrictions** → *Restrict key* → tick only what this app uses:
+  **Identity Toolkit API**, **Token Service API**, **Cloud Firestore API**.
+- Leave **Application restrictions** as *None*. The native sign-in library and the JS SDK
+  don't send an HTTP referrer or an Android package signature the way a browser or the
+  native Firebase SDK would, so an Android or referrer restriction here breaks sign-in.
+  The API restriction above is the one that carries the weight.
+
+**Save.** The key is now useless for anything but the three APIs this app legitimately
+calls, all of which are guarded by your Firestore rules and by Google's own auth. At that
+point the GitHub alert is genuinely safe to dismiss.
 
 ## 9. Rebuild
 
