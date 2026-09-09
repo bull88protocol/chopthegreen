@@ -12,26 +12,25 @@ Budget about 20 minutes. All of it is free at your scale.
 
 ---
 
-## What you have to come back with
+## Status — configured as of 9 September 2026
 
-Everything below produces exactly **seven values**, all of which go into
-`expo.extra` in `app.json`. Nothing else in the project needs touching.
+All seven values are in `app.json` and `syncEnabled` is now **true**. Project
+`chop-the-greens` (`50714944335`).
 
-| `app.json` key | Comes from | Looks like |
-|---|---|---|
-| `firebaseApiKey` | Web app config (step 3) | `AIza…` |
-| `firebaseAuthDomain` | Web app config | `<project-id>.firebaseapp.com` |
-| `firebaseProjectId` | Web app config | `chop-the-greens` |
-| `firebaseStorageBucket` | Web app config | `<project-id>.firebasestorage.app` |
-| `firebaseMessagingSenderId` | Web app config | 12 digits |
-| `firebaseAppId` | Web app config | `1:…:web:…` — **`web`, not `android`** |
-| `googleWebClientId` | Google sign-in (step 5) | `…-….apps.googleusercontent.com` |
+| Done | |
+|---|---|
+| ✅ | Web app registered; its config is in `app.json` (`appId` ends `:web:`) |
+| ✅ | Android app registered, SHA-1 added — `certificate_hash` in `google-services.json` verified against `credentials/chopthegreens-upload.keystore` |
+| ✅ | Google sign-in enabled; `oauth_client` now carries a `client_type: 1` (Android) and `client_type: 3` (Web) entry |
+| ✅ | `googleWebClientId` = the `client_type: 3` value |
 
-Two more things have to be *true* but produce no value: the SHA-1 must be registered
-(step 4) and Firestore must exist with the rules published (step 6). Skip either and
-sign-in compiles fine and then fails on the phone.
+| Still open | |
+|---|---|
+| ⏳ | **Firestore database + rules** (step 6). Sign-in works without it; the *backup* then fails with `permission-denied` and the account sheet shows "Sync problem". |
+| ⏳ | **API key restriction** (step 8b). Do this before the config is committed. |
 
-If you paste me the whole `firebaseConfig` block plus the Web client ID, I'll wire it in.
+The walkthrough below is kept for the next project, and because the traps in it are
+worth not rediscovering.
 
 ---
 
@@ -114,8 +113,50 @@ Click **Register app**, then click straight through **Download google-services.j
 **Add Firebase SDK** and **Next steps** — none of it applies here. Nothing breaks if you
 download the file; it simply isn't used.
 
-Missed the fingerprint? Add it later at **⚙ Project settings → General → Your apps →** the
-Android app **→ Add fingerprint**.
+**The console often doesn't ask for the SHA-1 during registration** — the field is hidden
+or collapsed in the current flow. That's fine, but it does mean you have to go back for it:
+**⚙ Project settings → General → Your apps →** the Android app **→ Add fingerprint**.
+
+You can tell whether it landed by re-downloading `google-services.json` and looking at
+`oauth_client`. While it reads `[]`, either the fingerprint or Google sign-in (step 5) is
+still missing, and sign-in will fail on the phone with `DEVELOPER_ERROR`.
+
+### ⛔ Ignore the Gradle instructions Firebase shows you next
+
+After registering the Android app, the console walks you through adding the
+`com.google.gms.google-services` plugin, `google-services.json`, and a
+`firebase-analytics` dependency to `build.gradle`. **Do none of it.** Three reasons, each
+sufficient on its own:
+
+1. **Nothing here would read it.** This app talks to Firebase through the **JS SDK** with
+   the config in `app.json`, and signs in through `@react-native-google-signin`, which takes
+   its `webClientId` at runtime from that same config. There is no native Firebase SDK in
+   this project to consume `google-services.json`. The signed release builds and runs today
+   without the file — verified.
+2. **`android/` is generated, so the edit wouldn't survive.** `npx expo prebuild --clean`
+   deletes and regenerates the whole directory. Native config in this project comes from
+   config plugins (`plugins/withReleaseSigning.js`, and the google-signin plugin in
+   `app.json`), never from hand-edited Gradle files. That rule is what keeps release signing
+   working across rebuilds.
+3. **It would add analytics.** The snippet's one concrete dependency is
+   `firebase-analytics`. Your store listing says "No tracking", `PRIVACY.md` says there is
+   no analytics, and the Data Safety form is answered accordingly. Adding it would make all
+   three false.
+
+The Android app registration exists for exactly one reason: to hold the SHA-1. Register it,
+add the fingerprint, close the tab.
+
+> **If you ever build for iOS**, revisit this. The google-signin plugin is declared in
+> `app.json` with no options, which selects its Firebase path — on iOS that path expects a
+> `GoogleService-Info.plist`. Either add one, or switch the entry to the options form and
+> pass `iosUrlScheme`. Android is unaffected either way.
+
+### A second API key now exists
+
+Registering the Android app auto-created an **Android key** alongside the **Browser key**
+from step 3. They're different values. `app.json` uses the *browser* one; nothing in this
+project uses the Android one. When you do step 8b, restrict both — or leave the Android key
+restricted to nothing at all, since no code here calls it.
 
 > **After your first Play upload, come back and add a second fingerprint.** Play App
 > Signing re-signs your app with *Google's* key, so the SHA-1 your users actually run under

@@ -50,3 +50,7 @@ dist-release/
 
 # Scratch web export used by scripts/make-screenshots.py
 .screenshot-build/
+
+# Scratch paste of the Firebase console's config snippet. Its values belong in
+# app.json; keeping the raw drop out of git avoids committing it twice.
+firebase.block
