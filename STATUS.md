@@ -6,15 +6,17 @@ screenshots, Firebase half-wired).
 
 - **What it is:** an Expo / React Native cooking app for
   [chopthegreens.com](https://chopthegreens.com), shipping to Google Play.
-- **Where:** `/home/sun/chop_the_green` (git repo, **no commits yet**).
+- **Where:** `/home/sun/chop_the_green` → [bull88protocol/chopthegreen](https://github.com/bull88protocol/chopthegreen) on `main`.
+  Pushes use the `github-bull88` SSH alias (`~/.ssh/bull88_deploy`); the default key
+  authenticates as `CoinTranscend`, which has read but **not** write on that org.
 - **Goal:** Google Play release.
 
 ---
 
 ## ⏳ What's left
 
-Six of the nine items are closed. What remains is three accounts-and-hosting jobs that
-need your Google login, and a commit.
+Seven of the nine items are closed. What remains needs your Google login — nothing is
+blocked on code or assets.
 
 | # | Task | Why it's blocking | Who |
 |---|---|---|---|
@@ -24,7 +26,7 @@ need your Google login, and a commit.
 | ~~4~~ | ~~2–8 phone screenshots~~ | **Done** — 7 captured on the Pixel 8a. Light set in `store/screenshots/`, dark in `dark-alternate/`. | ✅ |
 | 5 | **Host the privacy policy** | Play requires a public URL. `PRIVACY.md` is finished — contact email is `sungari.001@gmail.com`. Just publish it at e.g. `chopthegreens.com/app-privacy/`. | You |
 | 6 | **Create the app in Play Console** | Upload `dist-release/chopthegreens-1.0.0-play.aab` to Internal testing. Everything it asks for now exists — see `PLAYSTORE.md`. | You |
-| 7 | **Commit the repo** | Still zero commits. Nothing is under version control yet. | Either |
+| ~~7~~ | ~~Commit the repo~~ | **Done** — initial commit `b4abb26`, 79 files, pushed to `bull88protocol/chopthegreen`. `credentials/`, `dist-release/` and `android/` stay ignored. | ✅ |
 | ~~8~~ | ~~Re-verify on the Pixel~~ | **Done** — installed and screenshotted on hardware. | ✅ |
 | 9 | **Finish Firebase** | Project `chopthegreens` exists and its keys are in `app.json`. Two values still missing — a **Web app ID** and a **Web client ID** — plus a SHA-1 registration and Firestore rules. `SYNC-SETUP.md` has a table of exactly what's outstanding. | You |
 
