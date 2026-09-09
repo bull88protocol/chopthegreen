@@ -47,14 +47,14 @@
       "typedRoutes": true
     },
     "extra": {
-      "_comment": "Firebase / Google sign-in \u2014 see SYNC-SETUP.md. Sync stays OFF while these are blank, which is a supported way to ship. Fill in all seven to turn it on.",
-      "firebaseApiKey": "",
-      "firebaseAuthDomain": "",
-      "firebaseProjectId": "",
-      "firebaseStorageBucket": "",
-      "firebaseMessagingSenderId": "",
-      "firebaseAppId": "",
-      "googleWebClientId": ""
+      "_comment": "Firebase / Google sign-in \u2014 see SYNC-SETUP.md. Values from the chop-the-greens web app. Values from the chop-the-greens project. These are public identifiers, not secrets \u2014 see SYNC-SETUP.md step 8b for the API-key restriction that makes that safe.",
+      "firebaseApiKey": "AIzaSyCIUhwQgRQ1wInvftRUvXOJb4DKc8GltSE",
+      "firebaseAuthDomain": "chop-the-greens.firebaseapp.com",
+      "firebaseProjectId": "chop-the-greens",
+      "firebaseStorageBucket": "chop-the-greens.firebasestorage.app",
+      "firebaseMessagingSenderId": "50714944335",
+      "firebaseAppId": "1:50714944335:web:3b9ff9214e1a772ee91b3a",
+      "googleWebClientId": "50714944335-9vtu40js8iu00eml7euhp42lecj22c5k.apps.googleusercontent.com"
     }
   }
 }

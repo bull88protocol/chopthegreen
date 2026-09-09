@@ -25,10 +25,10 @@ All seven values are in `app.json` and `syncEnabled` is now **true**. Project
 | ✅ | `googleWebClientId` = the `client_type: 3` value |
 | ✅ | **Firestore database + rules** (step 6) — created and published |
 | ✅ | **Sign-in and backup verified end to end** — signed in on hardware and the sync round trip works |
+| ✅ | **API key restricted** (step 8b), 9 September 2026 — `app.json` committed with the config |
 
-| Still open | |
-|---|---|
-| ⏳ | **API key restriction** (step 8b). Do this before the config is committed. |
+Nothing is outstanding. Step 8b still matters for the *next* key: restrict it before it
+lands in a commit, not after.
 
 The walkthrough below is kept for the next project, and because the traps in it are
 worth not rediscovering.

@@ -15,24 +15,23 @@ end; one release blocker left, and it isn't code).
 
 ## ▶ Pick up here
 
-**State as of 9 September 2026.** Working tree is clean *except* for one deliberate
-hold; `main` is pushed to
-[bull88protocol/chopthegreen](https://github.com/bull88protocol/chopthegreen).
+**State as of 9 September 2026.** Working tree is **clean** — the long-running hold on
+`app.json` is over. `main` is committed; check whether it's pushed.
 
-### One file is uncommitted on purpose
+### The `app.json` hold is resolved
 
-`app.json` carries the live Firebase config, including the API key. It is **modified but
-not committed**, waiting on the key being restricted in Google Cloud Console
-(`SYNC-SETUP.md` step 8b). GitHub secret scanning already flagged the *previous* project's
-key, and committing an unrestricted one walks straight back into that.
+`app.json` carried the live Firebase config uncommitted for several days, waiting on the
+API key being restricted in Google Cloud Console (`SYNC-SETUP.md` step 8b) — GitHub secret
+scanning had flagged the *previous* project's key, and committing an unrestricted one walks
+straight back into that.
 
-```bash
-git status --short      # expect exactly: ` M app.json`
-git diff app.json       # the seven expo.extra values
-```
+Sunny restricted the key on 9 September 2026 and the file is now committed with the seven
+`expo.extra` values in it. Nothing is deliberately held back any more.
 
-**If the key has been restricted since:** commit and push it, nothing else needed.
-**If not:** leave it alone. The build works from the working tree regardless.
+> Firebase config values are public identifiers that ship in every APK — the restriction is
+> what makes committing them safe, because an *unrestricted* `AIzaSy…` key works against any
+> billable API on the project. If you ever rotate the key, restrict the new one **before**
+> it lands in a commit.
 
 ### Nothing is blocking a release any more
 
@@ -89,8 +88,8 @@ cp android/app/build/outputs/apk/release/app-release.apk dist-release/chopthegre
 
 ## ⏳ What's left
 
-Seven of the ten items are closed. The three that remain are yours — a file copy, a
-Console setting and the upload itself. Nothing is blocked on code, assets or docs.
+Eight of the ten items are closed. Two remain, both yours: a file copy and the Play
+Console listing. Nothing is blocked on code, assets or docs.
 
 | # | Task | Why it's blocking | Who |
 |---|---|---|---|
@@ -103,7 +102,7 @@ Console setting and the upload itself. Nothing is blocked on code, assets or doc
 | ~~7~~ | ~~Commit the repo~~ | **Done** — initial commit `b4abb26`, 79 files, pushed to `bull88protocol/chopthegreen`. `credentials/`, `dist-release/` and `android/` stay ignored. | ✅ |
 | ~~8~~ | ~~Re-verify on the Pixel~~ | **Done** — installed and screenshotted on hardware. | ✅ |
 | ~~9~~ | ~~Finish Firebase~~ | **Done** — project `chop-the-greens`, all seven values wired, `syncEnabled` **true**, SHA-1 verified, Firestore created with rules published, and sign-in + backup tested on hardware. | ✅ |
-| 10 | **Restrict the API key** | `SYNC-SETUP.md` step 8b. Not a release blocker — it's what's holding `app.json` uncommitted. | You |
+| ~~10~~ | ~~Restrict the API key~~ | **Done** — restricted 9 September 2026, and `app.json` committed with it. | ✅ |
 
 **Sync is on and working as of 9 September 2026.** That changed two things outside the
 code, both now handled in `PLAYSTORE.md`: the Play **Data Safety** form takes the "collects
