@@ -1,8 +1,8 @@
 # Chop the Greens — project status
 
 **Single source of truth for what's done and what's left.** Update this file when state
-changes. Last updated: **9 September 2026** (v5.2 — Firestore live and sync verified end to
-end; one release blocker left, and it isn't code).
+changes. Last updated: **9 September 2026** (v5.4 — **published to closed testing**; the
+14-day tester clock is running, earliest production 24 September 2026).
 
 - **What it is:** an Expo / React Native cooking app for
   [chopthegreens.com](https://chopthegreens.com), shipping to Google Play.
@@ -15,8 +15,44 @@ end; one release blocker left, and it isn't code).
 
 ## ▶ Pick up here
 
-**State as of 9 September 2026.** Working tree is **clean** — the long-running hold on
-`app.json` is over. `main` is committed; check whether it's pushed.
+**State as of 9 September 2026.** **The app is live on Google Play in closed testing.**
+Working tree is clean; `main` is committed — check whether it's pushed
+(`git log --oneline origin/main..HEAD`).
+
+Everything that was ever blocked on code, assets, docs or config is finished. The only
+thing left is *waiting*, plus one file copy.
+
+### ⏱ The 14-day tester clock — the live thing to track
+
+Play can require **12 testers opted into a closed track for 14 continuous days** before
+production is available.
+
+| | Date | |
+|---|---|---|
+| Closed testing published | **Wed 9 Sep 2026** | done |
+| 12 testers opted in | **Thu 10 Sep 2026** | *estimated* — 1 day to recruit |
+| Halfway check | Thu 17 Sep 2026 | confirm the count hasn't dropped |
+| 14 days elapsed → **submit to production** | **Thu 24 Sep 2026** | earliest |
+
+**"Continuous" is the word that bites.** The 14 days reset if the opted-in count falls
+below 12 — a tester who leaves the programme or uninstalls can restart the clock without
+any notification. So the recurring job for any session between now and 24 September is:
+**open Console → Testing → Closed testing and check the tester count is still ≥ 12.** If
+recruitment slipped past 10 September, add the slippage to 24 September.
+
+> **Whether this gate even applies is unconfirmed.** It targets *newly created personal*
+> developer accounts, and this publishes from an established one (QuotePulse, Bull88,
+> Aurum) — `PLAYSTORE.md` argues it shouldn't apply. Sunny asked for the clock to be
+> tracked anyway, which is the right call: if it doesn't apply, production opens earlier
+> and nothing is lost. **Check the Production page in Console** — if it shows no tester
+> requirement, submit immediately and ignore this table.
+
+### One thing still open
+
+**Back up `credentials/`.** It holds the Play upload key, it's gitignored, and it exists
+nowhere else on earth. This has been outstanding all week and is the only item here with
+an irreversible failure mode — losing it means a support ticket with Google to reset the
+upload key. Copy it to a password manager or an encrypted drive.
 
 ### The `app.json` hold is resolved
 
@@ -33,9 +69,9 @@ Sunny restricted the key on 9 September 2026 and the file is now committed with 
 > billable API on the project. If you ever rotate the key, restrict the new one **before**
 > it lands in a commit.
 
-### Nothing is blocking a release any more
+### Privacy policy — live (9 September 2026)
 
-The privacy policy is **live** at
+The privacy policy is at
 
 > https://chopthegreens.com/privacy-policy-chop-the-greens/
 
@@ -45,7 +81,7 @@ section. That one URL satisfies **both** Play fields — *Policy → App content
 policy* **and** the account-deletion URL that answering "OAuth" on Data Safety triggers.
 
 Code, icons, screenshots, feature graphic, signed artifacts, listing copy, Data Safety
-answers and the policy are all done. What's left is Play Console work and one tidy-up.
+answers and the policy are all done.
 
 > The contact address renders through Cloudflare's email obfuscation, so it reads
 > "[email protected]" to anything without JavaScript and decodes to
@@ -88,8 +124,8 @@ cp android/app/build/outputs/apk/release/app-release.apk dist-release/chopthegre
 
 ## ⏳ What's left
 
-Eight of the ten items are closed. Two remain, both yours: a file copy and the Play
-Console listing. Nothing is blocked on code, assets or docs.
+Nine of the ten items are closed. **One remains: back up `credentials/`.** Everything else
+is either finished or waiting on the tester clock above.
 
 | # | Task | Why it's blocking | Who |
 |---|---|---|---|
@@ -98,7 +134,7 @@ Console listing. Nothing is blocked on code, assets or docs.
 | ~~3~~ | ~~Feature graphic, 1024×500~~ | **Done** — `store/feature-graphic.png`, built by `scripts/make-feature-graphic.py`. | ✅ |
 | ~~4~~ | ~~2–8 phone screenshots~~ | **Done** — 7 captured on the Pixel 8a. Light set in `store/screenshots/`, dark in `dark-alternate/`. | ✅ |
 | ~~5~~ | ~~Host the privacy policy~~ | **Done** — live at [chopthegreens.com/privacy-policy-chop-the-greens/](https://chopthegreens.com/privacy-policy-chop-the-greens/), verified reachable. Serves as both the privacy policy URL and the account-deletion URL. | ✅ |
-| 6 | **Create the app in Play Console** | Upload `dist-release/chopthegreens-1.0.0-play.aab` to Internal testing. Everything it asks for now exists — see `PLAYSTORE.md`. | You |
+| ~~6~~ | ~~Create the app in Play Console~~ | **Done** — listing complete and `chopthegreens-1.0.0-play.aab` published to **closed testing** on 9 September 2026. | ✅ |
 | ~~7~~ | ~~Commit the repo~~ | **Done** — initial commit `b4abb26`, 79 files, pushed to `bull88protocol/chopthegreen`. `credentials/`, `dist-release/` and `android/` stay ignored. | ✅ |
 | ~~8~~ | ~~Re-verify on the Pixel~~ | **Done** — installed and screenshotted on hardware. | ✅ |
 | ~~9~~ | ~~Finish Firebase~~ | **Done** — project `chop-the-greens`, all seven values wired, `syncEnabled` **true**, SHA-1 verified, Firestore created with rules published, and sign-in + backup tested on hardware. | ✅ |
@@ -147,6 +183,26 @@ change, no migration — and the old closing line becomes true again.
 | Social | YouTube / Instagram / Pinterest / TikTok at the foot of Discover; per-recipe share sheet links the blog post |
 | Sync | *Optional* Google sign-in backs up saves/list/plan to Firestore. Off unless configured — see `SYNC-SETUP.md` |
 | Sign-in prompts | A dismissible card on Saved / List / Plan, shown only when there's something to lose. Nothing is ever gated behind an account |
+
+### v5.4 — published to closed testing (9 September 2026)
+
+The listing is complete and `chopthegreens-1.0.0-play.aab` (versionCode 1) is live on
+Google Play in **closed testing**. Every Console question answered along the way is
+recorded in `PLAYSTORE.md` rather than only here: category and the two tags, the health
+declaration, which assets are AI-generated, why the video field is empty, the release
+notes, and why the deobfuscation warning doesn't apply.
+
+The live concern is now the **14-day tester clock**, tracked at the top of this file.
+Recruitment was estimated at one day from publication, putting 12 testers opted in on
+10 September and the earliest production submission on **24 September 2026**. The 14 days
+must be *continuous*, so the count dropping below 12 restarts it silently — that's what a
+resuming session should check first.
+
+Whether the gate applies at all is still unconfirmed; it targets newly created personal
+developer accounts and this one is established. Tracking it costs nothing and finding it
+doesn't apply is pure upside.
+
+One item outlives the launch: `credentials/` is still not backed up.
 
 ### v5.3 — privacy policy published (9 September 2026)
 

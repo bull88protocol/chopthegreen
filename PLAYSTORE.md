@@ -2,6 +2,19 @@
 
 Everything here is done locally — no Expo account or paid build service needed.
 
+## Current state — closed testing, 9 September 2026
+
+`chopthegreens-1.0.0-play.aab` (versionCode 1) is **published to closed testing**. The
+store listing is complete: copy, icon, feature graphic, seven screenshots, category and
+tags, content rating, Data Safety, the privacy policy URL, and the AI-asset labels.
+
+**The live item is the 14-day tester clock**, tracked in `STATUS.md` — 12 testers opted in
+for 14 *continuous* days, estimated to end **24 September 2026**. Whether it applies to an
+established developer account is unconfirmed; check the Production page.
+
+To promote to production later, promote the existing release rather than re-uploading —
+the version code carries over and the release notes are inherited.
+
 ## What you already have
 
 Both artifacts are built, signed and verified — copies are in `dist-release/`:
@@ -81,9 +94,11 @@ serve. Play splits the AAB per-device, so your users download noticeably less.
 ## Play Console, step by step
 
 1. **Account — already done.** You publish from an established Console account (QuotePulse,
-   Bull88, Aurum). That matters: the "12 testers for 14 continuous days" gate applies to
-   *newly created personal* developer accounts, so it should not apply here. You can move
-   internal → closed → production at your own pace.
+   Bull88, Aurum). The "12 testers for 14 continuous days" gate applies to *newly created
+   personal* developer accounts, so it should not apply here — but that has **not been
+   confirmed against Console**, and as of 9 September 2026 the clock is being tracked in
+   `STATUS.md` as a precaution. Check the Production page: if it lists no tester
+   requirement, submit and drop the clock.
 2. **Create app** — name `Chop the Greens`, English (US), *App*, *Free*. Category *Food & Drink*.
 3. **Upload** the `.aab` under *Testing → Internal testing* first. Internal testing has no
    review delay, so it's the fastest way to check the real thing installs from Play.
